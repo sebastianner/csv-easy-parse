@@ -1,0 +1,12 @@
+interface Constants {
+  readonly cvsUrl: string;
+  readonly png: string;
+}
+
+const constants: Constants = {
+  cvsUrl:
+    "https://www.stats.govt.nz/assets/Uploads/Business-financial-data/Business-financial-data-September-2022-quarter/Download-data/business-financial-data-september-2022-quarter-csv.zip",
+  png: "https://images.rawpixel.com/image_png_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcm00MjgtZWxlbWVudC0yNy5wbmc.png?s=VhrzbK51wpP7Bs9ihv4MlHXpOdGB02yWN0Y1a07F_Es",
+};
+
+export default constants;
