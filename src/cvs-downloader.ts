@@ -1,39 +1,34 @@
 import https from "https";
 import constants from "./constants.js";
-import AdmZip from "adm-zip";
-import path from "path";
+import unziper from "./unziper.js";
+import pathFinder from "./utils/pathFinder.js";
 import fs from "fs";
-import { fileTypeFromBuffer, FileTypeResult } from "file-type";
-
-function unziper(buffer: Buffer): void {
-  const zip: AdmZip = new AdmZip(buffer);
-  const dirname: string = new URL(".", import.meta.url).pathname;
-
-  const zipFilePath = path.join(dirname, "zipFiles");
-  if (!fs.existsSync(zipFilePath)) {
-    console.log(`Creating new zip folder at ${zipFilePath}...`);
-    fs.mkdirSync(zipFilePath);
-  }
-  zip.extractAllTo(zipFilePath, true);
-  console.log(`Zip file extracted at ${zipFilePath}...`);
-}
+import path from "path";
 
 function downloader() {
-  https.get(constants.cvsUrl, (res): void => {
+  const url: string = constants.zipUrl;
+  https.get(url, (res): void => {
     const data: Array<Buffer> = [];
     res
       .on("data", (chunk) => {
         data.push(chunk);
       })
-      .on("end", async (): Promise<void> => {
+      .on("end", (): Promise<void> => {
         let buffer = Buffer.concat(data);
-        const fileType: FileTypeResult = await fileTypeFromBuffer(buffer);
-        if (fileType.ext !== "zip") {
-          // TODO: Error handling
-          console.error("Wrong file type!");
+        const fileName: string = path.basename(url);
+        const fileType: string = res.headers["content-type"].split("/")[1];
+
+        if (fileType === "zip") {
+          unziper(buffer);
           return null;
         }
-        unziper(buffer);
+        fs.writeFile(
+          pathFinder("cvsFiles") + `/${fileName}`,
+          buffer,
+          (err) => err
+        );
+        // TODO: Error handling
+        // console.error("Wrong file type!");
       });
   });
 }

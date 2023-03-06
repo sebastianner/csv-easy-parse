@@ -11,8 +11,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "adm-zip": "^0.5.10",
-    "file-type": "^18.2.1"
+    "adm-zip": "^0.5.10"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.0",
