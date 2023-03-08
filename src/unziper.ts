@@ -1,5 +1,4 @@
 import AdmZip from "adm-zip";
-import fs from "fs";
 import pathFinder from "./utils/pathFinder.js";
 
 export default function unziper(buffer: Buffer): void {
