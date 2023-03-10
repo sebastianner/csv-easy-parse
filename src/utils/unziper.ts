@@ -1,5 +1,5 @@
 import AdmZip from "adm-zip";
-import pathFinder from "./utils/pathFinder.js";
+import pathFinder from "./pathFinder.js";
 
 export default function unziper(buffer: Buffer): void {
 	const zip: AdmZip = new AdmZip(buffer);

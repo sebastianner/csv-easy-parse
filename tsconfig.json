@@ -6,5 +6,10 @@
 		"moduleResolution": "NodeNext",
 		"sourceMap": true
 	},
-	"include": ["src/**/*"]
+	"include": ["src/**/*"],
+	"paths": {
+		"@config/*": ["src/config/*"],
+		"@services/*": ["src/services/*"],
+		"@utils/*": ["./src/utils/*"]
+	}
 }

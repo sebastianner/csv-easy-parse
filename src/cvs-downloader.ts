@@ -1,6 +1,6 @@
 import https from "https";
 import constants from "./config/constants.js";
-import unziper from "./unziper.js";
+import unziper from "./utils/unziper.js";
 import pathFinder from "./utils/pathFinder.js";
 import fs from "fs";
 import path from "path";
