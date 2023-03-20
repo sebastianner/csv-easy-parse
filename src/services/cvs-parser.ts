@@ -1,23 +1,44 @@
-import fs from "fs";
-import type { PathLike } from "fs";
-import type { CsvToObject } from "../interfaces/interfaces.js";
+import { Buffer } from "buffer";
+import type {
+	CsvToObject,
+	UnzipperResults,
+	ParserClass,
+	DynamicObject,
+} from "../interfaces/interfaces.js";
 
-export async function parser(cvsUrl: PathLike): Promise<CsvToObject> {
-	const cvsToObject: CsvToObject = {};
-	const fileName: string[] = [];
-	const files = await fs.promises.readdir(cvsUrl);
-	fileName.push(files[0]);
-	const cvs = await fs.promises.readFile(cvsUrl + `/${fileName[0]}`, {
-		encoding: "utf-8",
-	});
-	const rows: string[] = cvs.trim().split("\n");
-	const headers: string[] = rows.shift().split(",");
-	headers.forEach((header, index) => {
-		cvsToObject[header] = [];
-		rows.forEach((row) => {
-			const ObjectVal: string[] | number[] = row.split(",");
-			cvsToObject[header].push(ObjectVal[index]);
-		});
-	});
-	return cvsToObject;
+export class Parser implements ParserClass {
+	constructor(public unzipperResults: UnzipperResults, public buffer: Buffer) {}
+
+	private parse(contents: DynamicObject): CsvToObject {
+		const cvsToObject: CsvToObject = {};
+
+		for (const content in contents) {
+			const cvs: string = contents[content];
+			const rows: string[] = cvs.trim().split("\n");
+			const headers: string[] = rows.shift().split(",");
+			cvsToObject[content] = [];
+			headers.forEach((header, headerIndex) => {
+				cvsToObject[content][header] = [];
+				rows.forEach((row) => {
+					const ObjectVal: string[] | number[] = row.split(",");
+					cvsToObject[content][header].push(ObjectVal[headerIndex]);
+				});
+			});
+		}
+
+		return cvsToObject;
+	}
+
+	public typeVal(): CsvToObject {
+		if (this.unzipperResults) {
+			return this.parse(this.unzipperResults.zipContents);
+		} else {
+			const objectMock: DynamicObject = {
+				content: this.buffer.toString("utf8"),
+			};
+			return this.parse(objectMock);
+		}
+	}
 }
+
+//TODO SPLIT separator

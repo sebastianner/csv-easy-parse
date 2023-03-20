@@ -1,10 +1,11 @@
 import https from "https";
-import { unziper } from "../utils/unziper.js";
-import { pathFinder } from "../utils/pathFinder.js";
-import path from "path";
-import fs from "fs";
+import { unzipper } from "../utils/unziper.js";
+import type {
+	DownloaderResults,
+	UnzipperResults,
+} from "../interfaces/interfaces.js";
 
-export function downloader(url: string): Promise<void> {
+export function downloader(url: string): Promise<DownloaderResults> {
 	return new Promise((resolve, reject) => {
 		https.get(url, (res): void => {
 			const data: Array<Buffer> = [];
@@ -13,19 +14,20 @@ export function downloader(url: string): Promise<void> {
 				.on("data", (chunk) => {
 					data.push(chunk);
 				})
-				.on("end", async (): Promise<void> => {
-					const buffer = Buffer.concat(data);
+				.on("end", (): void => {
+					const buffer: Buffer = Buffer.concat(data);
 					const fileType: string = res.headers["content-type"].split("/")[1];
-
+					const downloaderResults: DownloaderResults = {
+						unzipperResults: undefined,
+						buffer: undefined,
+					};
 					if (fileType === "zip") {
-						unziper(buffer);
-						resolve();
+						const unzipped: UnzipperResults = unzipper(buffer);
+						downloaderResults.unzipperResults = unzipped;
+						resolve(downloaderResults);
 					} else {
-						await fs.promises.writeFile(
-							pathFinder("cvsFiles") + `/${path.basename(url)}.cvs`,
-							buffer
-						);
-						resolve();
+						downloaderResults.buffer = buffer;
+						resolve(downloaderResults);
 					}
 					// TODO: Error handling
 					// console.error("Wrong file type!");
