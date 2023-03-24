@@ -1,11 +1,13 @@
 import { downloader } from "./services/downloader.js";
-import { parse } from "./services/cvs-parser.js";
+import { parse } from "./services/csv-parser.js";
+import { pathResolver } from "./utils/pathResolver.js";
 import type {
 	CsvToObject,
 	DownloaderResults,
 	DynamicObject,
 } from "./interfaces/interfaces.js";
-import { constants } from "./config/constants.js";
+import path from "path";
+import fs from "fs";
 
 export async function fromZipUrl(
 	url: string,
@@ -16,7 +18,7 @@ export async function fromZipUrl(
 	return parse(zipContents, separator);
 }
 
-export async function fromCvsUrl(
+export async function fromCsvUrl(
 	url: string,
 	separator = ","
 ): Promise<CsvToObject> {
@@ -24,6 +26,16 @@ export async function fromCvsUrl(
 	return parse(contents.bufferToString, separator);
 }
 
-const x = await fromCvsUrl(constants.cvsUrl, ";");
-const y = await fromZipUrl(constants.altZip);
-console.log(x, y);
+export async function fromLocalPath(
+	localPath: string,
+	separator = ","
+): Promise<CsvToObject> {
+	const resolvePath: string = pathResolver(localPath);
+	const readCvs: string = await fs.promises.readFile(resolvePath, {
+		encoding: "utf8",
+	});
+	const entryName: string = path.basename(localPath);
+	const cvsObject: DynamicObject = {};
+	cvsObject[entryName] = readCvs;
+	return parse(cvsObject, separator);
+}
