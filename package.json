@@ -1,5 +1,5 @@
 {
-	"name": "cvs-file-interpreter",
+	"name": "csv-file-interpreter",
 	"version": "1.0.0",
 	"description": "",
 	"main": "dist/index.js",
