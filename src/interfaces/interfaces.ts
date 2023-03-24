@@ -13,7 +13,7 @@ export interface UnzipperResults {
 
 export interface DownloaderResults {
 	unzipperResults: UnzipperResults | undefined;
-	buffer: Buffer | undefined;
+	bufferToString: DynamicObject | undefined;
 }
 
 export interface ParserClass extends DownloaderResults {

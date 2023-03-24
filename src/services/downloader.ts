@@ -1,8 +1,10 @@
 import https from "https";
 import { unzipper } from "../utils/unziper.js";
+import path from "path";
 import type {
 	DownloaderResults,
 	UnzipperResults,
+	DynamicObject,
 } from "../interfaces/interfaces.js";
 
 export function downloader(url: string): Promise<DownloaderResults> {
@@ -19,18 +21,19 @@ export function downloader(url: string): Promise<DownloaderResults> {
 					const fileType: string = res.headers["content-type"].split("/")[1];
 					const downloaderResults: DownloaderResults = {
 						unzipperResults: undefined,
-						buffer: undefined,
+						bufferToString: undefined,
 					};
 					if (fileType === "zip") {
 						const unzipped: UnzipperResults = unzipper(buffer);
 						downloaderResults.unzipperResults = unzipped;
 						resolve(downloaderResults);
 					} else {
-						downloaderResults.buffer = buffer;
+						const objectMock: DynamicObject = {};
+						const baseName: string = path.basename(url);
+						objectMock[baseName] = buffer.toString("utf8");
+						downloaderResults.bufferToString = objectMock;
 						resolve(downloaderResults);
 					}
-					// TODO: Error handling
-					// console.error("Wrong file type!");
 				});
 		});
 	});

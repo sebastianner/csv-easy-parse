@@ -1,22 +1,29 @@
-import fs from "fs";
 import { downloader } from "./services/downloader.js";
-import { pathFinder } from "./utils/pathFinder.js";
-import { Parser } from "./services/cvs-parser.js";
+import { parse } from "./services/cvs-parser.js";
+import type {
+	CsvToObject,
+	DownloaderResults,
+	DynamicObject,
+} from "./interfaces/interfaces.js";
 import { constants } from "./config/constants.js";
-import type { DownloaderResults } from "./interfaces/interfaces.js";
 
-async function cvsInterpreter() {
-	const cvsFilePath: string = pathFinder("cvsFiles");
-	if (!fs.existsSync(cvsFilePath)) {
-		console.log(`Creating new zip folder at ${cvsFilePath}...`);
-		fs.mkdirSync(cvsFilePath);
-	}
-	const contents: DownloaderResults = await downloader(constants.altZip);
-	const cvsParsed: Parser = new Parser(
-		contents.unzipperResults,
-		contents.buffer
-	);
-	console.log(cvsParsed.typeVal());
+export async function fromZipUrl(
+	url: string,
+	separator = ","
+): Promise<CsvToObject> {
+	const contents: DownloaderResults = await downloader(url);
+	const zipContents: DynamicObject = contents.unzipperResults.zipContents;
+	return parse(zipContents, separator);
 }
 
-cvsInterpreter();
+export async function fromCvsUrl(
+	url: string,
+	separator = ","
+): Promise<CsvToObject> {
+	const contents: DownloaderResults = await downloader(url);
+	return parse(contents.bufferToString, separator);
+}
+
+const x = await fromCvsUrl(constants.cvsUrl, ";");
+const y = await fromZipUrl(constants.altZip);
+console.log(x, y);
