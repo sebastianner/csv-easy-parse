@@ -1,13 +1,13 @@
 import type { CsvToObject, DynamicObject } from "../interfaces/interfaces.js";
 
-export function parse(contents: DynamicObject, separator: string): CsvToObject {
+export function parse(contents: DynamicObject, separator: string): string {
 	const cvsToObject: CsvToObject = {};
 
 	for (const content in contents) {
 		const csv: string = contents[content];
 		const rows: string[] = csv.trim().split("\n");
 		const headers: string[] = rows.shift().split(separator);
-		cvsToObject[content] = [];
+		cvsToObject[content] = {};
 		headers.forEach((header, headerIndex) => {
 			cvsToObject[content][header] = [];
 			rows.forEach((row) => {
@@ -17,5 +17,5 @@ export function parse(contents: DynamicObject, separator: string): CsvToObject {
 		});
 	}
 
-	return cvsToObject;
+	return JSON.stringify(cvsToObject);
 }

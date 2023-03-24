@@ -1,5 +1,5 @@
 export interface CsvToObject {
-	[key: string]: (string | number)[];
+	[key: string]: DynamicObject | string[];
 }
 
 export interface DynamicObject {
