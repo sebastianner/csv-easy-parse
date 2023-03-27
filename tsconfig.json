@@ -5,7 +5,8 @@
 		"outDir": "dist",
 		"moduleResolution": "NodeNext",
 		"sourceMap": true,
-		"strict": true
+		"strict": true,
+		"declaration": true
 	},
 	"include": ["src/**/*"],
 	"paths": {
