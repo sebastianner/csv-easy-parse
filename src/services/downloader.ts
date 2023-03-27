@@ -10,31 +10,36 @@ import type {
 export function downloader(url: string): Promise<DownloaderResults> {
 	return new Promise((resolve, reject) => {
 		https.get(url, (res): void => {
-			const data: Array<Buffer> = [];
-			res
-				.on("error", reject)
-				.on("data", (chunk) => {
-					data.push(chunk);
-				})
-				.on("end", (): void => {
-					const buffer: Buffer = Buffer.concat(data);
-					const fileType: string = res.headers["content-type"].split("/")[1];
-					const downloaderResults: DownloaderResults = {
-						unzipperResults: undefined,
-						bufferToString: undefined,
-					};
-					if (fileType === "zip") {
-						const unzipped: UnzipperResults = unzipper(buffer);
-						downloaderResults.unzipperResults = unzipped;
-						resolve(downloaderResults);
-					} else {
-						const objectMock: DynamicObject = {};
-						const baseName: string = path.basename(url);
-						objectMock[baseName] = buffer.toString("utf8");
-						downloaderResults.bufferToString = objectMock;
-						resolve(downloaderResults);
-					}
-				});
+			const data: Buffer[] = [];
+			if (res.statusCode === 200) {
+				res
+					.on("error", reject)
+					.on("data", (chunk) => {
+						data.push(chunk);
+					})
+					.on("end", (): void => {
+						const buffer: Buffer = Buffer.concat(data);
+						const fileType: string | undefined =
+							res?.headers["content-type"]?.split("/")[1];
+						const downloaderResults: DownloaderResults = {
+							unzipperResults: { zipContents: {}, entryNames: [] },
+							bufferToString: {},
+						};
+						if (fileType === "zip") {
+							const unzipped: UnzipperResults = unzipper(buffer);
+							downloaderResults.unzipperResults = unzipped;
+							resolve(downloaderResults);
+						} else {
+							const objectMock: DynamicObject = {};
+							const baseName: string = path.basename(url);
+							objectMock[baseName] = buffer.toString("utf8");
+							downloaderResults.bufferToString = objectMock;
+							resolve(downloaderResults);
+						}
+					});
+			} else {
+				throw new Error(`${res?.statusCode?.toString()} ${res?.statusMessage}`);
+			}
 		});
 	});
 }

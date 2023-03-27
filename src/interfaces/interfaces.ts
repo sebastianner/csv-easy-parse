@@ -1,5 +1,7 @@
 export interface CsvToObject {
-	[key: string]: DynamicObject | string[];
+	[key: string]: {
+		[key: string]: Array<string | number>;
+	};
 }
 
 export interface DynamicObject {
@@ -12,8 +14,8 @@ export interface UnzipperResults {
 }
 
 export interface DownloaderResults {
-	unzipperResults: UnzipperResults | undefined;
-	bufferToString: DynamicObject | undefined;
+	unzipperResults: UnzipperResults;
+	bufferToString: DynamicObject;
 }
 
 export interface ParserClass extends DownloaderResults {

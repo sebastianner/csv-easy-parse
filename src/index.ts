@@ -12,8 +12,8 @@ export async function fromZipUrl(
 	url: string,
 	separator = ","
 ): Promise<string> {
-	const contents: DownloaderResults = await downloader(url);
-	const zipContents: DynamicObject = contents.unzipperResults.zipContents;
+	const contents = await downloader(url);
+	const zipContents: DynamicObject = contents?.unzipperResults?.zipContents;
 	return parse(zipContents, separator);
 }
 
