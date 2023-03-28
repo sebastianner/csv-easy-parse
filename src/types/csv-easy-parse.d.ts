@@ -9,7 +9,7 @@ declare module "csv-easy-parse" {
 	): Promise<string>;
 
 	export function fromManyLocalPath(
-		url: string,
+		localPaths: string[],
 		separator: string
 	): Promise<string>;
 }
