@@ -25,7 +25,7 @@ If the CSV file could not be read or processed.
 
 Example usage with try-catch exception handling:
 
-`
+`javascript
 try {
   const csvData = await fromZipUrl('https://example.com/csv.zip', ';');
   console.log(csvData);
