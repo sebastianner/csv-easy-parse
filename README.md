@@ -25,13 +25,14 @@ If the CSV file could not be read or processed.
 
 Example usage with try-catch exception handling:
 
-```javascript
+`
 try {
   const csvData = await fromZipUrl('https://example.com/csv.zip', ';');
   console.log(csvData);
 } catch (error) {
   console.error(error);
-}```
+}`
+
 ### fromCsvUrl
 
 Function to parse a single CSV file from a URL
@@ -51,13 +52,13 @@ If the CSV file could not be read or processed.
 
 Example usage with try-catch exception handling:
 
-```javascript
+`
 try {
   const csvData = await fromCsvUrl('https://example.com/data.csv', '|');
   console.log(csvData);
 } catch (error) {
   console.error(error);
-}```
+}`
 ### fromLocalPath
 
 Read a CSV file from a local path and parse it
@@ -77,13 +78,13 @@ If the CSV file could not be read or processed.
 
 Example usage with try-catch exception handling:
 
-```javascript
+`
 try {
   const csvData = await fromLocalPath('/path/to/file.csv', ';');
   console.log(csvData);
 } catch (error) {
   console.error(error);
-}```
+}`
 ### fromManyLocalPath
 
 Read multiple CSV files from local paths and parse them
@@ -105,10 +106,10 @@ If any of the CSV files could not be read or processed.
 
 Example usage with try-catch exception handling:
 
-```javascript
+`
 try {
   const csvData = await fromManyLocalPath(['/path/to/file1.csv', '/path/to/file2.csv ;', '/path/to/file3.csv |']);
   console.log(csvData);
 } catch (error) {
   console.error(error);
-}```
+}`
