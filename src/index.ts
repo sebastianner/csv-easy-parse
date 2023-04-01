@@ -9,7 +9,7 @@ import fs from "fs";
 Function to parse a CSV file from a URL pointing to a ZIP archive containing one or more CSV files
 @param url - The URL pointing to the ZIP file
 @param separator - The separator used in the CSV file (default: comma)
-@returns - A Promise that resolves to the parsed CSV data as an Array
+@returns - A Promise that resolves to the parsed CSV data as an Array of JSON
 @throws - If the CSV file could not be read or processed
 */
 export async function fromZipUrl(
@@ -65,7 +65,7 @@ export async function fromZipUrl(
 Function to parse a single CSV file from a URL
 @param url - The URL pointing to the CSV file
 @param separator - The separator used in the CSV file (default: comma)
-@returns - A Promise that resolves to the parsed CSV data as a string
+@returns - A Promise that resolves to the parsed CSV data as a JSON
 @throws - If the CSV file could not be read or processed
 */
 export async function fromCsvUrl(
@@ -92,7 +92,7 @@ export async function fromCsvUrl(
 Read a CSV file from a local path and parse it
 @param localPath - The local path of the CSV file
 @param separator - The separator used in the CSV file (default: comma)
-@returns - A Promise that resolves to the parsed CSV data as a string
+@returns - A Promise that resolves to the parsed CSV data as a JSON
 @throws - If the CSV file could not be read or processed
 */
 export async function fromLocalPath(
@@ -133,7 +133,7 @@ export async function fromLocalPath(
  * @param localPaths - String Array that contains all the paths pointing to the CSV files.
  * Additionally, if the file contains a specific separator, this could be declared within the string with a space and the separator. E.g '../files/file.csv ;'
  * If not declared, the default separator will be a comma.
- * @returns - A Promise that resolves to the parsed CSV data as an Array
+ * @returns - A Promise that resolves to the parsed CSV data as an Array of JSON
  * @throws - If the CSV file could not be read or processed
  */
 export async function fromManyLocalPath(
